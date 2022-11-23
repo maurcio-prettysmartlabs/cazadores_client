@@ -122,18 +122,17 @@
           });
         });
 
-      let btn = document.getElementById("submitCazador");
-      btn.addEventListener("click", (event) => {
+      let btn = $("#submitCazador").on("click", (event) => {
         handleOnSubmit();
         event.preventDefault();
       });
 
       let handleOnSubmit = () => {
-        let empresa = document.getElementById("empresa").value;
-        let nombreProyecto = document.getElementById("nombreProyecto").value;
-        let requisitos = document.getElementById("requisitos").value;
-        let duracion = document.getElementById("duracion").value;
-        let puestosDisponibles = document.getElementById("puestosDisponibles").value;
+        let empresa = $("#empresa").val();
+        let nombreProyecto = $("#nombreProyecto").val();
+        let requisitos = $("#requisitos").val();
+        let duracion = $("#duracion").val();
+        let puestosDisponibles = $("#puestosDisponibles").val();
 
         let objToSend = {
           empresa,
@@ -143,7 +142,6 @@
           puestosDisponibles,
         };
 
-        console.log(objToSend);
         fetch("http://localhost:3000/api/createproyecto", {
           body: JSON.stringify(objToSend),
           method: "POST",
