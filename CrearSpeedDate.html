@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Cazadores de Talento</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="./index.html">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./Cazadores.html">Lista de Cazadores</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./Talentos.html">Lista de Talentos</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+              Proyectos
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="./CrearProyect.html">Crear Proyecto</a></li>
+              <li><a class="dropdown-item" href="./Proyectos.html">Consultar Proyectos</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+              Contratos
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="./CrearContrato.html">Crear Contrato</a></li>
+              <li><a class="dropdown-item" href="./Contratos.html">Consultar Contratos</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+              Speed Dates
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="./CrearSpeedDate.html">Crear Speed Date</a></li>
+              <li><a class="dropdown-item" href="./SpeedDates.html">Consultar Speed Dates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+              Citas
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="./CrearJuntaTrabajo.html">Crear Cita de trabajo</a></li>
+              <li><a class="dropdown-item" href="./JuntasTrabajo.html">Consultar Cita de trabajo</a></li>
+            </ul>
+          </li>
+        </ul>
+        <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Sign In</button> -->
+      </div>
+    </nav>
+
+    <h1 style="text-align: center">Registro de Speed Date.</h1>
+    <h3 style="text-align: center">Ingresa los datos que se piden a continuacion:</h3>
+    <div class="container">
+      <form>
+        <!-- <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Empresa</label>
+          <input type="text" class="form-control" id="empresa" name="empresa" aria-describedby="emailHelp" />
+        </div> -->
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">Proyectos Invitados</label>
+
+          <div id="proyectosInvitados"></div>
+          <input type="text" class="form-control" id="proyectos" name="proyectos" disabled />
+        </div>
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">Talentos Invitados</label>
+
+          <div id="talentosInvitados"></div>
+          <input type="text" class="form-control" id="talentos" name="talentos" disabled />
+        </div>
+
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">Duración de cada sesión.</label>
+          <select class="form-control" id="duracionSesion">
+            <option>5min</option>
+            <option>10min</option>
+            <option>15min</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="exampleFormControlSelect1">Tipo de Reunion</label>
+          <select class="form-control" id="tipoReunion">
+            <option>En linea</option>
+            <option>Presencial</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Horario</label>
+          <input type="date" class="form-control" id="horario" name="horario" aria-describedby="emailHelp" />
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Ubicacion</label>
+          <input name="ubicacion" type="text" class="form-control" id="ubicacion" />
+        </div>
+        <button id="submitCazador" onclick="{handleOnSubmit}" type="submit" class="btn btn-primary">subir</button>
+      </form>
+    </div>
+
+    <script>
+      let proyectos = [];
+      let talentos = [];
+      //Talentos fetcha
+      fetch("http://localhost:3000/api/talentos", {
+        mode: "cors",
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((res) => {
+          let talentosSelect = document.getElementById("talentosInvitados");
+          let talentosInput = document.getElementById("talentos");
+          let talentosText = "";
+          res.forEach((talento) => {
+            let button = document.createElement("button");
+            button.innerText = talento.nombre;
+            button.className = "btn btn-primary m-1";
+            button.id = talento.id;
+            button.addEventListener("click", (event) => {
+              talentos.push({
+                talentName: event.target.innerText,
+                id: event.target.id,
+              });
+              let btn = document.getElementById(event.target.id);
+              btn.disabled = !btn.disabled;
+              talentosText = talentosText + "-" + event.target.innerText;
+              talentosInput.value = talentosText;
+              event.preventDefault();
+            });
+            talentosSelect.appendChild(button);
+          });
+        });
+
+      //Proyectos fetcha
+      fetch("http://localhost:3000/api/proyectos", {
+        mode: "cors",
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((res) => {
+          let proyectosSelect = document.getElementById("proyectosInvitados");
+          let proyectosInput = document.getElementById("proyectos");
+          let proyectosText = "";
+          res.forEach((proyecto) => {
+            console.log(proyecto);
+            let button = document.createElement("button");
+            button.innerText = `${proyecto.nombreProyecto} by ${proyecto.empresa.nombreEmpresa}`;
+            button.className = "btn btn-primary m-1";
+            button.id = proyecto.id;
+            button.addEventListener("click", (event) => {
+              proyectos.push({
+                proyectName: event.target.innerText,
+                id: event.target.id,
+              });
+              let btn = document.getElementById(event.target.id);
+              btn.disabled = !btn.disabled;
+              proyectosText = proyectosText + "-" + event.target.innerText;
+              proyectosInput.value = proyectosText;
+              event.preventDefault();
+            });
+            proyectosSelect.appendChild(button);
+          });
+        });
+
+      let btn = document.getElementById("submitCazador");
+      btn.addEventListener("click", (event) => {
+        handleOnSubmit();
+        event.preventDefault();
+      });
+
+      let handleOnSubmit = () => {
+        let duracionSesion = document.getElementById("duracionSesion").value;
+        let tipoReunion = document.getElementById("tipoReunion").value;
+        let horario = document.getElementById("horario").value;
+        let ubicacion = document.getElementById("ubicacion").value;
+
+        let objToSend = {
+          proyectos,
+          talentos,
+          duracionSesion,
+          tipoReunion,
+          horario,
+          ubicacion,
+        };
+
+        fetch("http://localhost:3000/api/createspeeddate", {
+          body: JSON.stringify(objToSend),
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          mode: "cors",
+        })
+          .then((res) => {
+            window.location.replace("./index.html");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      };
+    </script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

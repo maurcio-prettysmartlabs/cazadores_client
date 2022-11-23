@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Cazadores de Talento</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="./index.html">Home <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./Cazadores.html">Lista de Cazadores</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./Talentos.html">Lista de Talentos</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+              Proyectos
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="./CrearProyect.html">Crear Proyecto</a></li>
+              <li><a class="dropdown-item" href="./Proyectos.html">Consultar Proyectos</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+              Contratos
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="./CrearContrato.html">Crear Contrato</a></li>
+              <li><a class="dropdown-item" href="./Contratos.html">Consultar Contratos</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+              Speed Dates
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="./CrearSpeedDate.html">Crear Speed Date</a></li>
+              <li><a class="dropdown-item" href="./SpeedDates.html">Consultar Speed Dates</a></li>
+            </ul>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+              Citas
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="./CrearJuntaTrabajo.html">Crear Cita de trabajo</a></li>
+              <li><a class="dropdown-item" href="./JuntasTrabajo.html">Consultar Cita de trabajo</a></li>
+            </ul>
+          </li>
+        </ul>
+        <!-- <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Sign In</button> -->
+      </div>
+    </nav>
+
+    <div class="container">
+      <table id="dataTable" class="table"></table>
+    </div>
+
+    <script>
+      let handleDelete = (identifier) => {
+        console.log(identifier);
+        fetch(`http://localhost:3000/api/proyectos?identifier=${identifier}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          mode: "cors",
+        })
+          .then((res) => {
+            window.location.replace("./index.html");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      };
+      fetch("http://localhost:3000/api/proyectos", {
+        mode: "cors",
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((res) => {
+          const data = res.map((data) => {
+            return {
+              "Nombre Proyecto": data.nombreProyecto,
+              Empresa: data.empresa.nombreEmpresa,
+              Puestos: data.puestosDisponibles,
+              Requisitos: data.requisitos,
+              Duración: data.duracion,
+            };
+          });
+          let tableFromJson = () => {
+            // Extract value from table header.
+            let col = [];
+            for (let i = 0; i < data.length; i++) {
+              for (let key in data[i]) {
+                if (col.indexOf(key) === -1) {
+                  col.push(key);
+                }
+              }
+            }
+
+            // Create table.
+            const table = document.getElementById("dataTable");
+
+            // Create table header row using the extracted headers above.
+            let tr = table.insertRow(-1); // table row.
+            for (let i = 0; i < col.length; i++) {
+              let th = document.createElement("th"); // table header.
+              th.innerHTML = col[i];
+              tr.appendChild(th);
+            }
+
+            // Create actions row
+            let th = document.createElement("th"); // table header.
+            th.innerHTML = "Actions";
+            tr.appendChild(th);
+
+            // add json data to the table as rows.
+            for (let i = 0; i < data.length; i++) {
+              tr = table.insertRow(-1);
+
+              for (let j = 0; j < col.length + 1; j++) {
+                if (j === col.length) {
+                  let tabCell = tr.insertCell(-1);
+                  let actionsDiv = document.createElement("div");
+                  // // Create ver  button
+                  // let buttonVer = document.createElement("button");
+                  // buttonVer.innerText = "ver";
+                  // buttonVer.className = "btn btn-primary m-1";
+                  // // buttonVer.id = talento.id;
+                  // actionsDiv.appendChild(buttonVer);
+                  // tabCell.appendChild(buttonVer);
+
+                  // Create delete  button
+                  let buttonDel = document.createElement("button");
+                  buttonDel.innerText = "borrar";
+                  buttonDel.className = "btn btn-primary m-1";
+                  buttonDel.addEventListener("click", (event) => {
+                    handleDelete(data[i]["Nombre Proyecto"]);
+                  });
+                  // buttonDel.id = talento.id;
+                  actionsDiv.appendChild(buttonDel);
+                  tabCell.appendChild(buttonDel);
+                } else {
+                  let tabCell = tr.insertCell(-1);
+                  tabCell.innerHTML = data[i][col[j]];
+                }
+              }
+            }
+          };
+          tableFromJson();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    </script>
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
